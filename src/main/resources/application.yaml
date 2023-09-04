@@ -1,0 +1,41 @@
+camunda.bpm:
+  database.type: postgres
+  admin-user:
+    id: admin
+    password: admin
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5436/adapters
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    password: example
+  jpa:
+    properties:
+      hibernate:
+        ddl-auto: validate
+        default_schema: public
+        dialect: org.hibernate.dialect.PostgreSQL95Dialect
+        format_sql: true
+        order_by:
+          default_null_ordering: last
+    open-in-view: false
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: kafka_camunda
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    out-of-order: true
+    schemas: public
+    default-schema: public
+    placeholders:
+      db_schema: public
