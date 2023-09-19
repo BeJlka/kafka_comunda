@@ -6,7 +6,6 @@ import lombok.experimental.Accessors;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -16,7 +15,7 @@ import java.util.UUID;
 public class ReportEntity {
 
     @Id
-    @GeneratedValue(generator = "UUID_GENERATOR")
+    @GeneratedValue
     private UUID id;
 
     private String description;

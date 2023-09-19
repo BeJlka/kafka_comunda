@@ -1,6 +1,5 @@
 package com.example.workflow.kafka.consumer;
 
-import com.example.workflow.service.KafkaHandlerOneService;
 import com.example.workflow.service.KafkaHandlerTwoService;
 import com.example.workflow.util.KafkaUtils;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +11,6 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
-import java.util.UUID;
 
 import static com.example.workflow.util.Constant.COUNT;
 import static com.example.workflow.util.Constant.USER_ID;

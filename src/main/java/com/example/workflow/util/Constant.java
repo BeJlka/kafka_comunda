@@ -13,7 +13,7 @@ public class Constant {
 
     public static final String TOPIC = "topic";
 
-    public static final String VALID = "isValid";
+    public static final String COUNT_ERROR = "COUNT_ERROR";
 
-    public static final String CHECK = "isCheck";
+    public static final String VALIDATE_ERROR = "VALIDATE_ERROR";
 }

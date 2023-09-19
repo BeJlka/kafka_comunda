@@ -1,18 +1,17 @@
 package com.example.workflow.delegate;
 
+import com.example.workflow.configuration.KafkaProperties;
 import com.example.workflow.dto.MessageDto;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.kafka.common.header.Headers;
+import org.camunda.bpm.engine.delegate.BpmnError;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import static com.example.workflow.util.Constant.*;
@@ -24,6 +23,8 @@ public class ValidMessage implements JavaDelegate {
 
     private final ObjectMapper objectMapper;
 
+    private final KafkaProperties kafkaProperties;
+
     @Override
     public void execute(DelegateExecution delegateExecution) throws Exception {
         String message = (String) delegateExecution.getVariable(MESSAGE);
@@ -34,14 +35,15 @@ public class ValidMessage implements JavaDelegate {
             messageDto = objectMapper.readValue(message, MessageDto.class);
         } catch (Exception e) {
             log.error("Не получилось преобразовать сообщение в MessageDto", e);
-            delegateExecution.setVariable(VALID, false);
-            return;
+            checkTopic(delegateExecution);
+            throw new BpmnError(VALIDATE_ERROR);
         }
 
         if (StringUtils.isBlank(messageDto.getFirstName())
                 || StringUtils.isBlank(messageDto.getLastName())) {
             log.error("Поля firstName и lastName не должны быть пустыми");
-            delegateExecution.setVariable(VALID, false);
+            checkTopic(delegateExecution);
+            throw new BpmnError(VALIDATE_ERROR);
         }
 
         String pattern = (String) delegateExecution.getVariable(PATTERN);
@@ -55,11 +57,16 @@ public class ValidMessage implements JavaDelegate {
             LocalDate.parse(messageDto.getBirthDay(), formatter);
         } catch (Exception exc) {
             log.error("Значение даты рождения {} не соответствует формату yyyy-MM-dd", messageDto.getBirthDay());
-            delegateExecution.setVariable(VALID, false);
-            return;
+            checkTopic(delegateExecution);
+            throw new BpmnError(VALIDATE_ERROR);
         }
 
         delegateExecution.setVariable(MESSAGE, messageDto);
-        delegateExecution.setVariable(VALID, true);
+    }
+
+    private void checkTopic(DelegateExecution delegateExecution) {
+        if (StringUtils.isBlank((String) delegateExecution.getVariable(TOPIC))) {
+            delegateExecution.setVariable(TOPIC, kafkaProperties.getExceptionQueue());
+        }
     }
 }

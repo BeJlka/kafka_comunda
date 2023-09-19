@@ -9,7 +9,6 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import static com.example.workflow.util.Constant.MESSAGE;
 import static com.example.workflow.util.Constant.USER_ID;

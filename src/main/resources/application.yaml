@@ -4,12 +4,18 @@ camunda.bpm:
     id: admin
     password: admin
 
+application:
+  kafka:
+    input: "input"
+    exception-queue: "exception_queue"
+    dead-letter-queue: "dead_letter_queue"
+
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5436/adapters
+    url: jdbc:postgresql://localhost:5439/kafka_camunda
     driverClassName: org.postgresql.Driver
     username: postgres
-    password: example
+    password: postgres
   jpa:
     properties:
       hibernate:
@@ -22,13 +28,13 @@ spring:
     open-in-view: false
   kafka:
     consumer:
-      bootstrap-servers: localhost:9092
+      bootstrap-servers: localhost:9091
       group-id: kafka_camunda
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
     producer:
-      bootstrap-servers: localhost:9092
+      bootstrap-servers: localhost:9091
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
   flyway:
