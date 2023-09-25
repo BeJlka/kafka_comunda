@@ -5,6 +5,8 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-public class MessageDto {
-    private String login;
+public class UserDto {
+    private String lastName;
+    private String firstName;
+    private String birthDay;
 }

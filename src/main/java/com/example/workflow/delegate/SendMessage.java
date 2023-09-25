@@ -1,6 +1,9 @@
 package com.example.workflow.delegate;
 
+import com.example.workflow.configuration.KafkaProperties;
+import com.example.workflow.dto.MessageDto;
 import com.example.workflow.kafka.producer.KafkaProducer;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.header.Header;
@@ -19,14 +22,17 @@ import static com.example.workflow.util.Constant.*;
 @RequiredArgsConstructor
 public class SendMessage implements JavaDelegate {
 
+    private final ObjectMapper objectMapper;
+
     private final KafkaProducer kafkaProducer;
+
+    private final KafkaProperties kafkaProperties;
 
     @Override
     public void execute(DelegateExecution delegateExecution) throws Exception {
-        String topic = (String) delegateExecution.getVariable(TOPIC);
         String userId = (String) delegateExecution.getVariable(USER_ID);
         Integer count = (Integer) delegateExecution.getVariable(COUNT);
-        String message = (String) delegateExecution.getVariable(MESSAGE);
+        MessageDto message = (MessageDto) delegateExecution.getVariable(MESSAGE);
 
         List<Header> headers = new ArrayList<>();
         headers.add(new RecordHeader(USER_ID, userId.getBytes()));
@@ -35,8 +41,8 @@ public class SendMessage implements JavaDelegate {
             headers.add(new RecordHeader(COUNT, count.toString().getBytes()));
         }
 
-        kafkaProducer.send(topic, headers, message);
+        kafkaProducer.send(kafkaProperties.getExceptionQueue(), headers, objectMapper.writeValueAsString(message));
 
-        log.info("Сообщение с userId: {} отправлено в topic: {}", delegateExecution.getVariable(USER_ID), delegateExecution.getVariable(TOPIC));
+        log.info("Сообщение с userId: {} отправлено в topic: {}", delegateExecution.getVariable(USER_ID), kafkaProperties.getExceptionQueue());
     }
 }

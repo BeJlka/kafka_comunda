@@ -35,7 +35,7 @@ public class KafkaHandlerTwoConsumer {
 
         log.info("Получено сообщение из очереди exception_queue, с userId: {} и количеством попыток: {}", userId, count);
 
-        ProcessInstance exceptionQueue = runtimeService.startProcessInstanceByKey("exception_queue");
+        ProcessInstance exceptionQueue = runtimeService.startProcessInstanceByKey("input");
 
         log.info("Старт процесса exception_queue с id: {}", exceptionQueue.getId());
 

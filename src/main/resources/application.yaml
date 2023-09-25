@@ -5,6 +5,9 @@ camunda.bpm:
     password: admin
 
 application:
+  max-count-retry: 3
+  external:
+    url: 'http://localhost:8091'
   kafka:
     input: "input"
     exception-queue: "exception_queue"
@@ -45,3 +48,11 @@ spring:
     default-schema: public
     placeholders:
       db_schema: public
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: basic
