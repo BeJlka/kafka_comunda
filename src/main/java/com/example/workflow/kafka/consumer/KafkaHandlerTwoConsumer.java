@@ -24,7 +24,7 @@ public class KafkaHandlerTwoConsumer {
 
     private final RuntimeService runtimeService;
 
-    @KafkaListener(topics = "exception_queue")
+    @KafkaListener(topics = "exception_queue", errorHandler = "kafkaErrorHandler")
     public void consumer(ConsumerRecord<String, String> event) {
         Map<String, String> headers = KafkaUtils.headersToMap(event.headers());
 

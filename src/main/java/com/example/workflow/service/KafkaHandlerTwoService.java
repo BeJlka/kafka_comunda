@@ -38,7 +38,7 @@ public class KafkaHandlerTwoService {
             return;
         }
 
-        Map<String, Object> map = Map.of(USER_ID, userId, COUNT, count++, MESSAGE, message);
+        Map<String, Object> map = Map.of(USER_ID, userId, COUNT, count, MESSAGE, message);
 
         var id = taskService
                 .createTaskQuery()

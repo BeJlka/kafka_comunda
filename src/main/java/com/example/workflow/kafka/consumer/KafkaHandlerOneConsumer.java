@@ -22,7 +22,7 @@ public class KafkaHandlerOneConsumer {
     private final RuntimeService runtimeService;
 
 
-    @KafkaListener(topics = "input")
+    @KafkaListener(topics = "input", errorHandler = "kafkaErrorHandler")
     public void consumer(ConsumerRecord<String, String> event) throws JsonProcessingException {
         String userId = UUID.randomUUID().toString();
         log.info("Получено сообщение из очереди input, ему присвоен userId: {}", userId);
